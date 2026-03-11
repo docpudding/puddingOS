@@ -27,4 +27,13 @@
             set ploc /home/jack/.pos/local
         '';
     };
+
+    programs.qutebrowser = {
+        settings.url.start_pages = ["https://msoe.instructure.com/calendar"];
+        settings.url.default_page = "https://msoe.instructure.com/calendar";
+        quickmarks = {
+            "Canvas LMS" = "https://msoe.instructure.com/calendar";
+            "Find Hub" = "https://www.google.com/android/find";
+        };
+    };
 }
