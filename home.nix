@@ -1,4 +1,4 @@
-{
+{pkgs, ...}: {
     # Core home-manager configuration.
     home = {
         username = "jack";
@@ -26,7 +26,16 @@
             set pmod /home/jack/.pos/modules
             set ploc /home/jack/.pos/local
         '';
+
+        shellAliases = {
+            pgr = "rgr ~/.pos";
+            pcd = "rcd ~/.pos";
+        };
     };
+
+    wayland.windowManager.hyprland.settings.bind = [
+        "SUPER, P, exec, alacritty -e fish -c \"rcd ~/.pos; exec fish\""
+    ];
 
     programs.qutebrowser = {
         settings.url.start_pages = ["https://msoe.instructure.com/calendar"];
@@ -36,4 +45,8 @@
             "Find Hub" = "https://www.google.com/android/find";
         };
     };
+
+    home.packages = with pkgs; [
+        obs-studio
+    ];
 }
