@@ -1,11 +1,11 @@
 {pkgs, ...}: {
-    # Core home-manager configuration.
     home = {
         username = "jack";
         homeDirectory = "/home/jack";
         stateVersion = "25.11";
     };
 
+    # Core home-manager configuration.
     programs.fish = {
         functions = {
             # Configure current git repository to use personal account.

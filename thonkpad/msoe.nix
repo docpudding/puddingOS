@@ -26,6 +26,7 @@ in {
         wireshark # Wireshark desktop application.
         threat-dragon # Threat Dragon desktop application.
         libreoffice-still # Office document editor.
+        remmina # RDP client for Windows.
 
         # For Microservices class.
         kubectl
