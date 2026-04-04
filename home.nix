@@ -45,9 +45,4 @@
             "Find Hub" = "https://www.google.com/android/find";
         };
     };
-
-    programs.ssh = {
-        startAgent = true;
-        extraConfig = "AddKeysToAgent yes";
-    };
 }
