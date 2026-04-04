@@ -46,7 +46,8 @@
         };
     };
 
-    home.packages = with pkgs; [
-        obs-studio
-    ];
+    programs.ssh = {
+        startAgent = true;
+        extraConfig = "AddKeysToAgent yes";
+    };
 }
