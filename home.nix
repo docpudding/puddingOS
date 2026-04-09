@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{osConfig, ...}: {
     home = {
         username = "jack";
         homeDirectory = "/home/jack";
@@ -23,8 +23,9 @@
 
         # Shortcut to puddingOS configurations.
         shellInit = ''
-            set pmod /home/jack/.pos/modules
-            set ploc /home/jack/.pos/local
+            set pmod /etc/nixos/pos/modules
+            set ploc /etc/nixos/pos/local/${osConfig.networking.hostName}
+            set downloads /home/jack/stuff/downloads
         '';
 
         shellAliases = {
