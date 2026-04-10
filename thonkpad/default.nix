@@ -23,6 +23,13 @@
         };
     };
 
+    hardware.trackpoint = {
+        enable = true;
+        sensitivity = 64;
+        speed = 97;
+        emulateWheel = true;
+    };
+
     # Configure main NixOS user.
     users.users.jack = {
         isNormalUser = true;
