@@ -11,7 +11,7 @@ You can install and import one or both modules into your existing Nix configurat
 ```nix
 { ... }: let
     pos = builtins.fetchTarball {
-        url = "https://github.com/dr-pudding/pos/archive/release-25.11.tar.gz";
+        url = "https://github.com/jackmj1024/puddingOS/archive/release-25.11.tar.gz";
     };
 
     # Optional: required for puddingOS home-manager module.
@@ -36,7 +36,7 @@ Add puddingOS as a flake input alongside nixpkgs and home-manager:
 ```nix
 {
     inputs = {
-        pos.url = "github:dr-pudding/pos/release-25.11";
+        pos.url = "github:jackmj1024/puddingOS/release-25.11";
         nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
 
         # Optional: required for puddingOS home-manager module.
@@ -76,7 +76,7 @@ Add puddingOS as a flake input alongside nixpkgs and home-manager:
 The examples above are written with the assumption that you are are purely a user and are not making any changes to the puddingOS configuration directly. If you want to develop/modify puddingOS (beyond just overriding it from your own configurations), you will need to clone the repository manually:
 
 ```sh
-git clone https://github.com/dr-pudding/pos /path/to/pos
+git clone https://github.com/jackmj1024/puddingOS /path/to/pos
 ```
 
 Import the modules directly from their local paths rather than URLs:
@@ -95,7 +95,7 @@ inputs.pos.url = "path:/path/to/pos";
 Keep in mind that if you are using flakes and want to continue rebuilding without `--impure` then you must clone within the same root directory as your flake file. For most NixOS users, this is probably somewhere in `/etc/nixos`. If are like me and do not like accessing your configurations directly from that path, you could create a symbolic link. My own setup looks something like this:
 
 ```sh
-git clone https://github.com/dr-pudding/pos /etc/nixos
+git clone https://github.com/jackmj1024/puddingOS /etc/nixos
 chown USERNAME /etc/nixos/pos
 ln -s /etc/nixos/pos /home/USERNAME/.pos
 ```
