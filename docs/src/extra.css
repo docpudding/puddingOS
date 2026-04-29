@@ -1,0 +1,9 @@
+table {
+    width: auto;
+    margin-left: 0;
+    margin-right: auto;
+}
+
+th, td {
+    text-align: left;
+}

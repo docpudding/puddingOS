@@ -1,0 +1,153 @@
+@import "catppuccin.css";
+
+* {
+  font-family: OverpassMNerdFontMono; 
+  font-size: 16px;
+  min-height: 0;
+}
+
+#waybar {
+    background: transparent;
+    color: @text;
+    background-color: @base;
+    border: 2px solid @surface0;
+    border-radius: 6px;
+    min-height: 0;
+}
+
+/* Application launcher utility. */
+#custom-run {
+    font-size: 20px;
+
+    color: @mauve;
+    background-color: @surface0;
+    border-radius: 3px;
+
+    margin-left: 8px;
+    margin-right: 0px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+#custom-run:hover{
+    background-color: @overlay0;
+}
+
+#custom-run.active {
+    background-color: @surface1;
+    border-radius: 3px;
+}
+
+/* Workspace switch utility. */
+#workspaces {
+    background-color: @surface0;
+    border-radius: 3px;
+
+    margin-left: 0px;
+    margin-right: 16px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+#workspaces button {
+    all: unset;
+
+    border-radius: 3px;
+    min-width: 32px;
+
+    color: @lavender;
+    background-color: transparent;
+}
+
+#workspaces button.active {
+    color: @mauve;
+    background-color: @surface1;
+}
+
+#workspaces button:hover {
+    background-color: @overlay0;
+}
+
+/* Clock utility. */
+#clock {
+    color: @text;
+    background-color: @surface0;
+    border-radius: 3px;
+
+    margin: 8px;
+    padding-right: 12px;
+    padding-left: 12px;
+}
+
+#clock:hover {
+    background-color: @overlay0;
+}
+
+#clock.active {
+    background-color: @surface1;
+}
+
+/* Battery tracker utility for certain devices. */
+#battery {
+    color: @yellow;
+    background-color: @surface0;
+    border-radius: 3px;
+
+    margin-left: 8px;
+    margin-right: 0px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+
+    padding-right: 8px;
+    padding-left: 8px;
+}
+
+/* Volume tracker utility. */
+#wireplumber {
+    color: @peach;
+    background-color: @surface0;
+    border-radius: 3px;
+
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+
+    padding-right: 8px;
+    padding-left: 8px;
+}
+
+#wireplumber:hover {
+    background-color: @overlay0;
+}
+
+#wireplumber.active {
+    background-color: @surface1;
+}
+
+/* End session utility. */
+#custom-exit {
+    font-size: 20px;
+    color: @red;
+    background-color: @surface0;
+    border-radius: 3px;
+
+    margin-left: 0px;
+    margin-right: 8px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+
+    padding-right: 8px;
+    padding-left: 8px;
+}
+
+#custom-exit:hover {
+    background-color: @overlay0;
+}
+
+#custom-exit.active {
+    background-color: @surface1;
+}

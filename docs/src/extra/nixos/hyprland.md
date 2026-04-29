@@ -1,0 +1,1 @@
+This module provides an intsallation for the Hyprland window manager, but it does NOT provide configurations for it. Since configuration for Hyprland happens on the Home Manager level, this module is intended to be used with the corresponding Home Manager module in order to provide the full configured experience.
