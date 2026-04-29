@@ -258,8 +258,8 @@ in {
                 highlight Normal guibg=none
             '';
 
-            # Make Neovim backgrounds transparent so the terminal's background shows through.
             extraConfigLua = ''
+                -- Make Neovim backgrounds transparent so the terminal's background shows through.
                 vim.api.nvim_set_hl(0, "NormalNC", { bg = "none" })
                 vim.api.nvim_set_hl(0, "StatusLine", { bg = "none" })
                 vim.api.nvim_set_hl(0, "StatusLineNC", { bg = "none" })
@@ -273,6 +273,11 @@ in {
                 vim.api.nvim_set_hl(0, "TelescopeResultsBorder", { bg = "none" })
                 vim.api.nvim_set_hl(0, "TelescopePreviewNormal", { bg = "none" })
                 vim.api.nvim_set_hl(0, "TelescopePreviewBorder", { bg = "none" })
+
+                -- When connected over SSH, use OSC 52 for clipboard sharing.
+                if vim.env.SSH_TTY ~= nil then
+                    vim.g.clipboard = 'osc52'
+                end
             '';
 
             # Prerequisite packages
