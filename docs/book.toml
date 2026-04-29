@@ -1,12 +1,12 @@
 [book]
 title = "puddingOS"
-authors = ["dr-pudding"]
+authors = ["Jack Jones"]
 language = "en"
 src = "src"
 
 [output.html]
-site-url = "https://dr-pudding.github.io/pos"
-git-repository-url = "https://github.com/dr-pudding/pos"
+site-url = "https://jackmj1024.github.io/puddingOS"
+git-repository-url = "https://github.com/jackmj1024/puddingOS"
 edit-url-template = "{path}"
 default-theme = "macchiato"
 preferred-dark-theme = "macchiato"

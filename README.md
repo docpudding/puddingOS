@@ -133,4 +133,4 @@ If you don't like that approach, you could also just define a shortcut via an en
 
 ## Usage
 
-Extensive guides for configuring and using the various features of puddingOS can be found in the [full documentation](https://dr-pudding.github.io/pos).
+Extensive guides for configuring and using the various features of puddingOS can be found in the [full documentation](https://jackmj1024.github.io/puddingOS).
