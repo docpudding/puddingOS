@@ -1,4 +1,5 @@
 {
+    pkgs,
     pos,
     lib,
     ...
@@ -8,7 +9,6 @@
 
         # Extended local configurations.
         ./connections.nix
-        ./msoe.nix
     ];
 
     # Configure puddingOS modules.
@@ -21,8 +21,13 @@
             autologinUser = "jack";
             autostart.tty1 = "hyprland";
         };
+        godot = {
+            enable = true;
+            enableRemoteDebug = true;
+        };
     };
 
+    # Configure ThinkPad nipple.
     hardware.trackpoint = {
         enable = true;
         sensitivity = 64;
@@ -37,12 +42,13 @@
         extraGroups = ["wheel" "input" "docker"];
     };
 
-    home-manager.users.jack = {
-        imports = [
-            pos.homeManagerModules.default
-            ./home.nix
-        ];
-    };
+    # Network configuration.
+    networking.hostName = "thonkpad";
+    services.openssh.enable = true;
+
+    # System configuration.
+    time.timeZone = "America/Chicago";
+    system.stateVersion = "25.11";
 
     # Allow certain proprietary software sources.
     nixpkgs.config.allowUnfreePredicate = pkg:
@@ -53,11 +59,12 @@
             "mongodb"
         ];
 
-    # Network configuration.
-    networking.hostName = "thonkpad";
-    services.openssh.enable = true;
+    environment.systemPackages = with pkgs; [cloudflared libreoffice-still];
 
-    # System configuration.
-    time.timeZone = "America/Chicago";
-    system.stateVersion = "25.11";
+    home-manager.users.jack = {
+        imports = [
+            pos.homeManagerModules.default
+            ./home.nix
+        ];
+    };
 }
