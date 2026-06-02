@@ -7,7 +7,7 @@
 with lib; let
     nixvim = import (builtins.fetchTarball {
         url = "https://github.com/nix-community/nixvim/archive/nixos-25.11.tar.gz";
-        sha256 = "1v4gghvjrzj7kwzvwgwjbhbiavwzbc5ncwjicc1jgjwdmbdaqhw7";
+        sha256 = "1w8g8z5ps5cjph548hhjxpb3hppbm6wldzmlr4zn25ia48vc9qx7";
     });
 in {
     imports = [nixvim.homeManagerModules.nixvim];
@@ -220,6 +220,7 @@ in {
             };
 
             # Some miscellaneous configuration options.
+            filetype.extension.mdx = "markdown";
             opts = {
                 number = true; # Show absolute line numbers.
                 relativenumber = false; # Disable relative line numbers.
