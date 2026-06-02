@@ -13,6 +13,7 @@ in
             (pkgs.callPackage "${agenix}/pkgs/agenix.nix" {})
 
             # For generating documentation.
-            mdbook
+            nodejs
+            pnpm
         ];
     }

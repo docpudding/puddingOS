@@ -1,0 +1,1 @@
+This module provides a system-level installation for the Hyprland window manager, but it does NOT provide configurations for it. If you are interested using in my (very opinionated) Hyprland configurations, then you will want to use the [corresponding Home Manager module](https://docpudding.github.io/puddingOS/configuration/home-manager/hyprland/) alongside this one.

@@ -1,0 +1,1 @@
+This module provides a full working configuration for the Grub bootloader, complete with os-prober scanning. By default it will use EFI mode and autodetect the boot device, but it can be changed to BIOS mode by manually setting the boot device.

@@ -1,19 +1,15 @@
 name: Deploy Documentation
-
 on:
     push:
         branches:
             - release-25.11
-
 permissions:
     contents: read
     pages: write
     id-token: write
-
 concurrency:
     group: pages
     cancel-in-progress: true
-
 jobs:
     deploy:
         runs-on: ubuntu-latest
@@ -21,33 +17,27 @@ jobs:
             name: github-pages
             url: ${{ steps.deployment.outputs.page_url }}
         steps:
-            - name: Checkout
+            - name: Checkout.
               uses: actions/checkout@v4
 
-            - name: Install Nix
+            - name: Install Nix.
               uses: cachix/install-nix-action@v27
               with:
                   nix_path: nixpkgs=channel:nixos-25.11
 
-            - name: Build docs
+            - name: Build documentation.
               run: nix-build docs
 
-            - name: Upload pages artifact
+            - name: Prepare artifact.
+              run: |
+                  cp -rL result public-docs
+                  chmod -R u+w public-docs
+
+            - name: Upload pages artifact.
               uses: actions/upload-pages-artifact@v3
               with:
-                  path: result/book
+                  path: public-docs
 
-            - name: Delete previous artifacts
-              uses: geekyeggo/delete-artifact@v5
-              with:
-                  name: github-pages
-                  failOnError: false
-
-            - name: Upload pages artifact
-              uses: actions/upload-pages-artifact@v3
-              with:
-                  path: result/book
-
-            - name: Deploy to GitHub Pages
+            - name: Deploy to GitHub Pages.
               id: deployment
               uses: actions/deploy-pages@v4

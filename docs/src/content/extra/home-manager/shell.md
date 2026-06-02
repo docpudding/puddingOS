@@ -9,7 +9,7 @@ This module aims to improve the main shell experience in several different ways.
 | `bottom` | `top`         | Improved system monitor                        | `btm`                     |
 | `atuin`  | shell history | Improved command history system.               | press up arrow in shell   |
 | `pass`   | —             | Password manager.                              | `pass`                    |
-| `rng`    | —             | Quick randomizer created for puddingOS.        | `rng --help`              |
+| `rng`    | —             | Simple randomizer created for puddingOS.       | `rng --help`              |
 
 ### Aliases
 
@@ -17,7 +17,7 @@ This module aims to improve the main shell experience in several different ways.
 | ------ | ---------------------- | --------------------------------------------- |
 | `cat`  | `bat -pp`              | Print file in plain output mode (no pager).   |
 | `dupe` | `alacritty & disown`   | Open a new terminal in the current directory. |
-| `nsh`  | `nix-shell --run fish` | Open a `nix-shell` enivormnent with Fish.     |
+| `nsh`  | `nix-shell --run fish` | Open a `nix-shell` enivornment with Fish.     |
 
 ### Submodules
 

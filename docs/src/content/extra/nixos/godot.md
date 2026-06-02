@@ -1,0 +1,1 @@
+This module provides access to Godot Engine for your environment. In addition to providing access to both the standard version and the Mono version of the engine, it also provides an optional interface for remote debugging.

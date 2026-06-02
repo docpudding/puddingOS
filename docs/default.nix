@@ -6,7 +6,7 @@
 
     nixosEval = import "${pkgs.path}/nixos/lib/eval-config.nix" {
         inherit pkgs;
-        system = builtins.currentSystem;
+        system = pkgs.system;
         modules = [../modules/nixos];
     };
 
@@ -41,11 +41,6 @@
             };
     };
 
-    catppuccinCss = pkgs.fetchurl {
-        url = "https://github.com/catppuccin/mdBook/releases/latest/download/catppuccin.css";
-        sha256 = "1zx7zwxcz190223xxrvn8ghkichvz5h89h53qyf24ffz1alyd2z0";
-    };
-
     keymapsJson = pkgs.writeText "keymaps.json" (builtins.toJSON (
         map (k: {
             key = k.key;
@@ -56,32 +51,51 @@
             desc = k.options.desc or "";
         }) (import ../modules/home-manager/vi/keymaps.nix)
     ));
-    python = pkgs.python3;
-    generator = ./generate.py;
-in
-    pkgs.runCommand "pos-docs" {buildInputs = [pkgs.mdbook python];} ''
+
+    generatedDocs = pkgs.runCommand "pos-docs-generated" {buildInputs = [pkgs.python3];} ''
         mkdir -p $out
+        python3 ${./generate.py} \
+          ${nixosOptionsDoc.optionsJSON}/share/doc/nixos/options.json \
+          ${hmOptionsDoc.optionsJSON}/share/doc/nixos/options.json \
+          ${./src/content} \
+          $out \
+          ${keymapsJson}
+    '';
 
-        # Copy hand-written docs structure.
-        cp -r ${./src} src
-        chmod -R +w src
+    src = pkgs.lib.cleanSourceWith {
+        src = ./.;
+        filter = path: type: let
+            basename = builtins.baseNameOf path;
+        in
+            basename != "node_modules" && basename != "dist" && basename != ".astro";
+    };
+in
+    pkgs.stdenv.mkDerivation {
+        pname = "puddingos-docs";
+        version = "0.0.1";
+        inherit src;
 
-        # Generate per-module pages, SUMMARY.md, and README.
-        ${python}/bin/python3 ${generator} \
-            ${nixosOptionsDoc.optionsJSON}/share/doc/nixos/options.json \
-            ${hmOptionsDoc.optionsJSON}/share/doc/nixos/options.json \
-            src \
-            $out/README.md \
-            ${keymapsJson}
+        nativeBuildInputs = [pkgs.nodejs pkgs.pnpm.configHook];
 
-        # Copy book config.
-        cp ${./book.toml} book.toml
+        pnpmDeps = pkgs.pnpm.fetchDeps {
+            pname = "puddingos-docs";
+            version = "0.0.1";
+            inherit src;
+            fetcherVersion = 2;
+            hash = "sha256-Z8CSP7IbOjeURZUBZDHOYEnXIRBha5oHzIDyzZMNIBQ=";
+        };
 
-        # Install Catppuccin theme.
-        mkdir -p theme
-        cp ${catppuccinCss} theme/catppuccin.css
-        cp ${./src/extra.css} theme/extra.css
+        buildPhase = ''
+            runHook preBuild
+            mkdir -p src/content/docs/configuration
+            cp -r ${generatedDocs}/. src/content/docs/configuration/
+            pnpm run build
+            runHook postBuild
+        '';
 
-        # Build the book.
-        mdbook build --dest-dir $out/book
-    ''
+        installPhase = ''
+            runHook preInstall
+            cp -r dist $out
+            runHook postInstall
+        '';
+    }
