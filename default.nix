@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+    pkgs,
+    pos,
+    ...
+}: {
     # Only keep the most recent five generations.
     system.activationScripts.gc-old-generations = {
         text = ''
@@ -21,5 +25,8 @@
     };
 
     # Import home configurations.
-    home-manager.users.jack.imports = [./home.nix];
+    home-manager.users.jack.imports = [
+        pos.homeManagerModules.default
+        ./home.nix
+    ];
 }
