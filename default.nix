@@ -15,9 +15,9 @@
     # Network configurations.
     networking = {
         useDHCP = false;
-        networking.dhcpcd.enable = false;
+        dhcpcd.enable = false;
 
-        networking.networkmanager = {
+        networkmanager = {
             enable = true;
             #wifi.powersave = true;
             #dns = "none";
