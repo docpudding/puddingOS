@@ -5,13 +5,13 @@
         stateVersion = "25.11";
     };
 
-    # Core home-manager configuration.
+    # Core Home Manager configurations.
     programs = {
         git = {
             enable = true;
             userName = "Jackson Jones";
             userEmail = "jackmj@proton.me";
-            extraConfig.init.defaultBranch = "main";
+            settings.init.defaultBranch = "main";
         };
 
         fish = {
@@ -28,10 +28,10 @@
         };
 
         qutebrowser = {
-            settings.url.start_pages = ["https://msoe.instructure.com/calendar"];
-            settings.url.default_page = "https://msoe.instructure.com/calendar";
+            settings.url.start_pages = ["https://bb.tulsacc.edu/ultra/course"];
+            settings.url.default_page = "https://bb.tulsacc.edu/ultra/course";
             quickmarks = {
-                "Canvas LMS" = "https://msoe.instructure.com/calendar";
+                "Blackboard" = "https://bb.tulsacc.edu/ultra/course";
                 "Find Hub" = "https://www.google.com/android/find";
             };
         };
