@@ -1,6 +1,5 @@
 {
     pkgs,
-    pos,
     lib,
     ...
 }: {
@@ -60,11 +59,5 @@
         ];
 
     environment.systemPackages = with pkgs; [cloudflared libreoffice-still];
-
-    home-manager.users.jack = {
-        imports = [
-            pos.homeManagerModules.default
-            ./home.nix
-        ];
-    };
+    home-manager.users.jack.imports = [./home.nix];
 }

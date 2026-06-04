@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+    pkgs,
+    pos,
+    ...
+}: {
     system.activationScripts.gc-old-generations = {
         text = ''
             ${pkgs.nix}/bin/nix-env --profile /nix/var/nix/profiles/system --delete-generations +5
@@ -6,5 +10,8 @@
         '';
         deps = [];
     };
-    home-manager.users.jack.imports = [./home.nix];
+    home-manager.users.jack.imports = [
+        pos.homeManagerModules.default
+        ./home.nix
+    ];
 }
