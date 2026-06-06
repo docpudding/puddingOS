@@ -1,0 +1,3 @@
+This module provides a simple way to use and configure the Kodi media player. In addition to installing Kodi with several common support plugins, it also provides a custom `startkodi` command, which can be used to launch Kodi in a standalone X session in its own TTY. It is compatible with the `pos.sessions.autostart` system, which can be used to automatically start Kodi in a specific TTY.
+
+It also includes a collection of third-party addon repositories that can be enabled if desired. Currently, this only includes [smirgol's addon repository](https://github.com/smirgol/crunchyroll_repo) which provides the actively maintained Crunchyroll addon for Kodi.
