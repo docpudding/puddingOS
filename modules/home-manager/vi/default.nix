@@ -5,9 +5,10 @@
     ...
 }:
 with lib; let
-    nixvim = import (builtins.fetchTarball {
-        url = "https://github.com/nix-community/nixvim/archive/nixos-25.11.tar.gz";
-        sha256 = "1w8g8z5ps5cjph548hhjxpb3hppbm6wldzmlr4zn25ia48vc9qx7";
+    nixvim = import (builtins.fetchGit {
+        url = "https://github.com/nix-community/nixvim.git";
+        ref = "nixos-25.11";
+        rev = "8f43a6766ee5fe4bcb1bfdb33063110eab1b15e7";
     });
 in {
     imports = [nixvim.homeManagerModules.nixvim];
