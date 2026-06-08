@@ -47,6 +47,7 @@ in {
         ./limine
         ./godot
         ./steam
+        ./kodi
         ./cmd
     ];
 
