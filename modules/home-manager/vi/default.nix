@@ -58,6 +58,7 @@ in {
 
                     servers.nil_ls.enable = true; # Nix language
                     servers.markdown_oxide.enable = true; # Markdown
+                    servers.lemminx.enable = true; # XML
 
                     # TypeScript/JavaScript language with support for Vue/etc.
                     servers.ts_ls = {
@@ -293,6 +294,7 @@ in {
                 nodejs # Required for certain web development features.
                 typescript # Used by JavaScript/Typescript plugins.
                 vue-language-server # Provides @vue/typescript-plugin for ts_ls.
+                lemminx # XML language server
                 #gcc # For building native extensions
                 #gnumake # For building native extensions
             ];
