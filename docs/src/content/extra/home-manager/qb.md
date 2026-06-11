@@ -1,6 +1,6 @@
 This module provides a minimal configuration for qutebrowser with a few quality of life changes. It also changes the downloads directory from `~/Downloads` to `~/stuff/downloads` which is based on how my personal file system is set up. If you don't like it you can override it fairly easily.
 
-### Keybinds
+## Keybinds
 
 | Key      | New Action       |
 | -------- | ---------------- |

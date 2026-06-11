@@ -2,7 +2,7 @@ This module provides a complete Neovim setup configured via Nixvim that includes
 
 Once installed, it can be used by running either `vi`, `vim`, or `nvim`. An additional alias, `svi` which allows editing with root permissions while still maintaining the userspace Neovim configurations.
 
-### Overridden Keybinds
+## Overridden Keybinds
 
 The following keybinds have been changed from their Neovim defaults:
 
