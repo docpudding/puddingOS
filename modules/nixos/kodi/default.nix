@@ -55,7 +55,6 @@ with lib; {
             # Start a Kodi session on the current TTY when ready.
             (pkgs.writeShellScriptBin "startkodi" ''
                 ${pkgs.systemd}/bin/systemctl --user start pipewire.service wireplumber.service pipewire-pulse.service
-                ${pkgs.systemd}/bin/udevadm settle
                 exec startx ${kodiSession} -- vt''${XDG_VTNR:-3}
             '')
         ];

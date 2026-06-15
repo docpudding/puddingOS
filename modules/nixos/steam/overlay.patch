@@ -1,0 +1,67 @@
+diff --git a/src/Backends/DRMBackend.cpp b/src/Backends/DRMBackend.cpp
+index 1ec2699..ef5d962 100644
+--- a/src/Backends/DRMBackend.cpp
++++ b/src/Backends/DRMBackend.cpp
+@@ -1381,6 +1381,39 @@ void drm_sleep_screen( gamescope::GamescopeScreenType eType, bool bSleep )
+ 	cv_drm_sleep_screens[ eType ] = bSleep;
+ }
+ 
++void drm_release_session_state( struct drm_t *drm )
++{
++	drmModeAtomicReq *req = drmModeAtomicAlloc();
++	if ( !req )
++		return;
++
++	for ( auto &iter : drm->connectors )
++	{
++		gamescope::CDRMConnector *pConnector = &iter.second;
++
++		if ( pConnector->GetProperties().Colorspace )
++			pConnector->GetProperties().Colorspace->SetPendingValue( req, 0, true );
++
++		if ( pConnector->GetProperties().HDR_OUTPUT_METADATA )
++		{
++			if ( drm->sdr_static_metadata && pConnector->GetHDRInfo().IsHDR10() )
++				pConnector->GetProperties().HDR_OUTPUT_METADATA->SetPendingValue( req, drm->sdr_static_metadata->GetBlobValue(), true );
++			else
++				pConnector->GetProperties().HDR_OUTPUT_METADATA->SetPendingValue( req, 0, true );
++		}
++
++		if ( pConnector->GetProperties().content_type )
++			pConnector->GetProperties().content_type->SetPendingValue( req, 0, true );
++	}
++
++	uint32_t flags = DRM_MODE_ATOMIC_ALLOW_MODESET;
++	int ret = drmModeAtomicCommit( drm->fd, req, flags, nullptr );
++	if ( ret != 0 )
++		drm_log.errorf_errno( "drm_release_session_state: drmModeAtomicCommit failed" );
++
++	drmModeAtomicFree( req );
++}
++
+ 
+ 
+ void finish_drm(struct drm_t *drm)
+diff --git a/src/wlserver.cpp b/src/wlserver.cpp
+index 4d8546e..170ce53 100644
+--- a/src/wlserver.cpp
++++ b/src/wlserver.cpp
+@@ -115,6 +115,10 @@ bool wlserver_process_hotkeys( wlr_keyboard *keyboard, uint32_t key, bool press
+ 
+ extern std::atomic<bool> hasRepaint;
+ 
++struct drm_t;
++extern struct drm_t g_DRM;
++extern void drm_release_session_state( struct drm_t *drm );
++
+ std::vector<ResListEntry_t>& gamescope_xwayland_server_t::retrieve_commits()
+ {
+ 	static std::vector<ResListEntry_t> commits;
+@@ -307,6 +311,7 @@ static void wlserver_handle_key(struct wl_listener *listener, void *data)
+ #if HAVE_SESSION
+ 	if (wlserver.wlr.session && event->state == WL_KEYBOARD_KEY_STATE_PRESSED && keysym >= XKB_KEY_XF86Switch_VT_1 && keysym <= XKB_KEY_XF86Switch_VT_12) {
+ 		unsigned vt = keysym - XKB_KEY_XF86Switch_VT_1 + 1;
++		drm_release_session_state( &g_DRM );
+ 		wlr_session_change_vt(wlserver.wlr.session, vt);
+ 		return;
+ 	}

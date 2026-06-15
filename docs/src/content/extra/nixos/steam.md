@@ -15,3 +15,9 @@ pos.sessions = {
 ```
 
 The above configuration would create a hybrid system which simultaneously runs a Console Mode session and a Desktop Mode session which can be toggled by switching between TTYs. In fact, this specific behaviour was the original reason why the `pos.sessions` interface was created to begin with.
+
+### Gamescope HDR Patch
+
+This module also provides an overlay patch for Gamescope designed to fix a specific issue with HDR. When Gamescope is first launched on an HDR-capable display, it will enable HDR mode on the screen, which persists until it is either manually disabled or until the machine is rebooted. This isn't really an issue on devices that are used for Steam, but having HDR enabled when using other applications without HDR support (such as Kodi or Hyprland) can result in a strange-looking color display.
+
+This patch fixes the issue by disabling HDR when a clean Gamescope exit or keyboard VT change is detected. It is **enabled by default** and shouldn't cause any issues or conflicts, but it can be disabled if desired. One limitation to this is that it ONLY detects the TTY switch if it is initiated from a keyboard input (i.e. Ctrl+Alt+F2 or any other function key). Similarly, a non-clean Gamescope exit such as a crash or SIGKILL won't trigger the fix either. These limitations are the primary reason why this fix hasn't been submitted for an upstream push despite Gamescope having a [GitHub issue](https://github.com/ValveSoftware/gamescope/issues/769) for something similar.
