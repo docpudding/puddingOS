@@ -11,10 +11,28 @@ with lib; {
             default = false;
             description = "Enable Steam with Gamescope session.";
         };
+
+        enableOverlayPatches = mkOption {
+            type = types.bool;
+            default = true;
+            description = "Patch Gamescope to clear HDR connector state on VT switch.";
+        };
     };
 
     config = mkIf (config.pos.steam.enable
         && config.pos.enable) {
+        nixpkgs.overlays = optionals config.pos.steam.enableOverlayPatches [
+            (final: prev: {
+                gamescope = prev.gamescope.overrideAttrs (old: {
+                    patches =
+                        (old.patches or [])
+                        ++ [
+                            ./overlay.patch
+                        ];
+                });
+            })
+        ];
+
         programs = {
             # Main desktop gaming platform.
             steam = {
