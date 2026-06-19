@@ -20,13 +20,21 @@ def cmd(ctx):
     help="Specify a non-matching hostname to build for when rebuilding with flakes.",
 )
 @click.option(
-    "--offline",
-    help="Disable network features to ensure successful offline build.",
+    "--boot",
+    help="Postpone switch to new build until reboot.",
     is_flag=True,
 )
-def rebuild(flake_hostname: str = "", offline: bool = False):
+@click.option(
+    "--offline",
+    help="Disable network features to attempt offline build.",
+    is_flag=True,
+)
+def rebuild(flake_hostname: str = "", boot: bool = False, offline: bool = False):
     """Rebuild the system."""
-    cmd = "sudo nixos-rebuild switch"
+    if boot:
+        cmd = "sudo nixos-rebuild boot"
+    else:
+        cmd = "sudo nixos-rebuild switch"
 
     if flake_hostname != "":
         cmd += f" --flake /etc/nixos/flake.nix#{flake_hostname}"
