@@ -49,6 +49,7 @@ in {
         ./steam
         ./kodi
         ./cmd
+        ./tailscale
     ];
 
     config = lib.mkMerge [
