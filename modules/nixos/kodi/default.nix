@@ -54,6 +54,20 @@ with lib; {
 
             # Start a Kodi session on the current TTY when ready.
             (pkgs.writeShellScriptBin "startkodi" ''
+                for arg in "$@"; do
+                    case "$arg" in
+                        # Display usage information and exit.
+                        --help)
+                            echo "Usage: startkodi [OPTIONS]"
+                            echo ""
+                            echo "Launch a Kodi session via TTY."
+                            echo ""
+                            echo "Options:"
+                            echo "  --help    Show this message and exit."
+                            exit 0
+                            ;;
+                    esac
+                done
                 ${pkgs.systemd}/bin/systemctl --user start pipewire.service wireplumber.service pipewire-pulse.service
                 exec startx ${kodiSession} -- vt''${XDG_VTNR:-3}
             '')

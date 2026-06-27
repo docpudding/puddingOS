@@ -64,19 +64,49 @@ with lib; {
             kernelModules = ["hid-xpadneo"];
         };
 
-        # Create a script to launch gamescope session via TTY.
         environment.systemPackages = with pkgs; [
             gamescope-wsi # Required for extended Windows features like HDR.
+
+            # Create a script to launch gamescope session via TTY.
             (pkgs.writeScriptBin "startgs" ''
                 #!/usr/bin/env bash
-                set -xeuo pipefail
+                set -euo pipefail
+
+                for arg in "$@"; do
+                    case "$arg" in
+                        # Display usage information and exit.
+                        --help)
+                            echo "Usage: startgs [OPTIONS]"
+                            echo ""
+                            echo "Launch a console-like Steam session via TTY."
+                            echo ""
+                            echo "Options:"
+                            echo "  --no-hdr    Disable HDR output for this session."
+                            echo "  --help      Show this message and exit."
+                            exit 0
+                            ;;
+                    esac
+                done
+
+                set -x
+                hdr=1
+
+                for arg in "$@"; do
+                    case "$arg" in
+                        # Disable HDR output for this session.
+                        --no-hdr) hdr=0 ;;
+                    esac
+                done
 
                 gamescopeArgs=(
                     --adaptive-sync
-                    --hdr-enabled
                     --rt
                     --steam
+
                 )
+                if [[ "$hdr" == "1" ]]; then
+                    gamescopeArgs+=(--hdr-enabled)
+                fi
 
                 steamArgs=(
                     -pipewire-dmabuf
