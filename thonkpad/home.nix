@@ -1,4 +1,4 @@
-{...}: {
+{
     wayland.windowManager.hyprland.settings.monitor = [
         "eDP-1, 1920x1200@60, 0x0, 1"
     ];
@@ -19,4 +19,6 @@
         mangohud.enable = true;
         qb.enable = true;
     };
+
+    programs.zathura.enable = true;
 }

@@ -1,33 +1,35 @@
 {
-    pos,
+    pkgs,
     lib,
     ...
 }: {
-    imports = [
-        ./hardware.nix
-
-        # Extended local configurations.
-        ./connections.nix
-        ./msoe.nix
-    ];
+    imports = [./hardware.nix];
 
     # Configure puddingOS modules.
     pos = {
         enable = true;
-        grub.enable = true;
+
+        session.tty1 = {
+            autologinUser = "jack";
+            autostart = "hyprland";
+        };
+
+        session.tty2 = {
+            autologinUser = "jack";
+            autostart = "startkodi";
+        };
+
+        limine.enable = true;
+        tailscale.enable = true;
+
         hyprland.enable = true;
         steam.enable = true;
-        sessions = {
-            autologinUser = "jack";
-            autostart.tty1 = "hyprland";
-        };
-    };
+        kodi.enable = true;
 
-    hardware.trackpoint = {
-        enable = true;
-        sensitivity = 64;
-        speed = 97;
-        emulateWheel = true;
+        godot = {
+            enable = true;
+            enableRemoteDebug = true;
+        };
     };
 
     # Configure main NixOS user.
@@ -37,12 +39,13 @@
         extraGroups = ["wheel" "input" "docker"];
     };
 
-    home-manager.users.jack = {
-        imports = [
-            pos.homeManagerModules.default
-            ./home.nix
-        ];
-    };
+    # Network configuration.
+    networking.hostName = "thonkpad";
+    services.openssh.enable = true;
+
+    # System configuration.
+    time.timeZone = "America/Chicago";
+    system.stateVersion = "25.11";
 
     # Allow certain proprietary software sources.
     nixpkgs.config.allowUnfreePredicate = pkg:
@@ -53,11 +56,11 @@
             "mongodb"
         ];
 
-    # Network configuration.
-    networking.hostName = "thonkpad";
-    services.openssh.enable = true;
+    environment.systemPackages = with pkgs; [libreoffice-still moonlight-qt];
+    home-manager.users.jack.imports = [./home.nix];
 
-    # System configuration.
-    time.timeZone = "America/Chicago";
-    system.stateVersion = "25.11";
+    hardware.graphics = {
+        enable = true;
+        extraPackages = [pkgs.intel-media-driver];
+    };
 }
