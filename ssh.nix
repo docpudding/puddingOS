@@ -5,9 +5,9 @@
 
         matchBlocks = {
             "*" = {
-                identityFile = "~/.ssh/${config.networking.hostName}";
+                identityFile = "~/.ssh/key";
                 extraOptions = {
-                    PreferredAuthentications = "publickey,password";
+                    PreferredAuthentications = "publickey";
                     AddKeysToAgent = "yes";
                 };
             };
@@ -30,9 +30,8 @@
     };
 
     users.users.jack.openssh.authorizedKeys.keyFiles = [
-        ../termix.pub
-        ../thonkpad/thonkpad.pub
-        ../server/server.pub
-        ../console/console.pub
+        ./server/key.pub
+        ./desktop/key.pub
+        ./thonkpad/key.pub
     ];
 }
