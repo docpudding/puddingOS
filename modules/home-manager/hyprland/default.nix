@@ -134,7 +134,10 @@ with lib; {
                 };
             };
         };
-        catppuccin.hyprland.enable = true;
+        catppuccin = {
+            hyprland.enable = true;
+            cursors.enable = true;
+        };
 
         services = {
             # Use custom desktop wallpaper.
