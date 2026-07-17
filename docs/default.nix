@@ -3,18 +3,17 @@
         url = "https://github.com/nix-community/home-manager.git";
         rev = "0d02ec1d0a05f88ef9e74b516842900c41f0f2fe";
     };
-
     nixosEval = import "${pkgs.path}/nixos/lib/eval-config.nix" {
         inherit pkgs;
         system = pkgs.system;
+        specialArgs = {inputs = {};};
         modules = [../modules/nixos];
     };
-
     hmEval = import "${home-manager}/modules" {
         inherit pkgs;
         inherit (pkgs) lib;
         check = false;
-        extraSpecialArgs = {};
+        extraSpecialArgs = {inputs = {};};
         configuration = {
             imports = [../modules/home-manager];
             home.username = "user";
@@ -22,7 +21,6 @@
             home.stateVersion = "25.11";
         };
     };
-
     nixosOptionsDoc = pkgs.nixosOptionsDoc {
         options = nixosEval.options;
         transformOptions = opt:
@@ -31,7 +29,6 @@
                 visible = pkgs.lib.hasPrefix "pos" (builtins.concatStringsSep "." opt.loc);
             };
     };
-
     hmOptionsDoc = pkgs.nixosOptionsDoc {
         options = hmEval.options;
         transformOptions = opt:
@@ -40,7 +37,6 @@
                 visible = pkgs.lib.hasPrefix "pos" (builtins.concatStringsSep "." opt.loc);
             };
     };
-
     keymapsJson = pkgs.writeText "keymaps.json" (builtins.toJSON (
         map (k: {
             key = k.key;
@@ -51,7 +47,6 @@
             desc = k.options.desc or "";
         }) (import ../modules/home-manager/vi/keymaps.nix)
     ));
-
     generatedDocs = pkgs.runCommand "pos-docs-generated" {buildInputs = [pkgs.python3];} ''
         mkdir -p $out
         python3 ${./generate.py} \
@@ -61,7 +56,6 @@
           $out \
           ${keymapsJson}
     '';
-
     src = pkgs.lib.cleanSourceWith {
         src = ./.;
         filter = path: type: let
@@ -74,9 +68,7 @@ in
         pname = "puddingos-docs";
         version = "0.0.1";
         inherit src;
-
         nativeBuildInputs = [pkgs.nodejs pkgs.pnpm.configHook];
-
         pnpmDeps = pkgs.pnpm.fetchDeps {
             pname = "puddingos-docs";
             version = "0.0.1";
@@ -84,7 +76,6 @@ in
             fetcherVersion = 2;
             hash = "sha256-Z8CSP7IbOjeURZUBZDHOYEnXIRBha5oHzIDyzZMNIBQ=";
         };
-
         buildPhase = ''
             runHook preBuild
             mkdir -p src/content/docs/configuration
@@ -92,7 +83,6 @@ in
             pnpm run build
             runHook postBuild
         '';
-
         installPhase = ''
             runHook preInstall
             cp -r dist $out

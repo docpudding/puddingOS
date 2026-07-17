@@ -49,12 +49,15 @@ Add puddingOS as a flake input alongside nixpkgs and home-manager:
         };
     };
 
-    outputs = { nixpkgs, home-manager, pos, ... }: {
-        nixosConfigurations.HOSTNAME = nixpkgs.lib.nixosSystem {
+    outputs = {
+        nixpkgs,
+        home-manager,
+        pos,
+        ...
+    } @ inputs: {
+        nixosConfigurations.desktop = nixpkgs.lib.nixosSystem {
             system = "x86_64-linux";
-
-            # Optional: required for imported modules to access pos options.
-            specialArgs = { inherit pos; };
+            specialArgs = {inherit inputs pos;};
 
             modules = [
                 home-manager.nixosModules.home-manager

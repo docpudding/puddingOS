@@ -6,11 +6,6 @@
 }: let
     cfg = config.pos;
 
-    agenix = builtins.fetchGit {
-        url = "https://github.com/ryantm/agenix.git";
-        rev = "96e078c646b711aee04b82ba01aefbff87004ded";
-    };
-
     # Install styling library for various applications.
     catppuccin = builtins.fetchTarball {
         url = "https://github.com/catppuccin/nix/archive/release-25.11.tar.gz";
@@ -41,7 +36,6 @@ in {
     # Import dependencies and submodules.
     imports = [
         "${catppuccin}/modules/nixos"
-        "${agenix}/modules/age.nix"
         ./sessions.nix
         ./grub
         ./limine
@@ -50,6 +44,7 @@ in {
         ./kodi
         ./cmd
         ./tailscale
+        ./servers
     ];
 
     config = lib.mkMerge [
@@ -78,10 +73,6 @@ in {
 
             # Main font set for system applications.
             fonts.packages = [pkgs.nerd-fonts.overpass];
-
-            environment.systemPackages = [
-                (pkgs.callPackage "${agenix}/pkgs/agenix.nix" {})
-            ];
         })
 
         # SDDM module (display manager).
