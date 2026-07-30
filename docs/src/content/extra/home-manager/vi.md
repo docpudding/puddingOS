@@ -2,6 +2,8 @@ This module provides a complete Neovim setup configured via Nixvim that includes
 
 Once installed, it can be used by running either `vi`, `vim`, or `nvim`. An additional alias, `svi` which allows editing with root permissions while still maintaining the userspace Neovim configurations.
 
+When using this module as a code IDE, the `<F5>` key is used to run the project. The behaviour depends on the type of project, and can be overridden by creating a `.virun` file at the root of your project containing the desired run command.
+
 ## Overridden Keybinds
 
 The following keybinds have been changed from their Neovim defaults:
