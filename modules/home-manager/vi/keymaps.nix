@@ -24,12 +24,12 @@
             (function()
                 -- Ordered list of project markers and their default run commands, most specific first.
                 local project_runners = {
+                    { marker = "project.godot", command = "godot --path ." },
                 --[[
                     { marker = "Cargo.toml", command = "cargo run" },
                     { marker = "package.json", command = "npm start" },
                     { marker = "pyproject.toml", command = "python main.py" },
                     { marker = "go.mod", command = "go run ." },
-                    { marker = "project.godot", command = "godot --path ." },
                     { marker = "flake.nix", command = "nix run" },
                     { marker = "Makefile", command = "make" },
                 --]]
