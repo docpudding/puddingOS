@@ -10,7 +10,7 @@ As a general tip, `startgs` is fully compatible with the core module's session m
 pos.sessions = {
     autologinUser = "gamerman";
     autostart.tty1 = "startgs";
-    autostart.tty2 = "hyprland";
+    autostart.tty2 = "start-hyprland";
 };
 ```
 

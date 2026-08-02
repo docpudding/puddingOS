@@ -7,8 +7,8 @@
 with lib; let
     nixvim = import (builtins.fetchGit {
         url = "https://github.com/nix-community/nixvim.git";
-        ref = "nixos-25.11";
-        rev = "8f43a6766ee5fe4bcb1bfdb33063110eab1b15e7";
+        ref = "nixos-26.05";
+        rev = "667c8471f4a0fb24d702d1a61af8609f1a5f1ba6";
     });
 in {
     imports = [nixvim.homeManagerModules.nixvim];
@@ -123,7 +123,7 @@ in {
                         # Use special options for certain formatters.
                         formatters = {
                             prettier = {
-                                command = "${pkgs.nodePackages.prettier}/bin/prettier";
+                                command = "${pkgs.prettier}/bin/prettier";
                                 args = ["--tab-width" "4" "--stdin-filepath" "$FILENAME"];
                             };
 
@@ -194,7 +194,7 @@ in {
                 # Syntax parsing/highlighting/etc.
                 treesitter = {
                     enable = true;
-                    grammarPackages = pkgs.vimPlugins.nvim-treesitter.passthru.allGrammars;
+                    grammarPackages = config.programs.nixvim.plugins.treesitter.package.allGrammars;
                     settings.highlight.enable = true;
                 };
 
@@ -214,7 +214,7 @@ in {
 
                         # Configure styling.
                         options = {
-                            theme = "catppuccin";
+                            theme = "catppuccin-nvim";
                             icons_enabled = true;
                         };
                     };
@@ -238,14 +238,12 @@ in {
                         dark = "macchiato";
                     };
 
-                    # Integrate with Neovim plugins.
                     default_integrations = true;
                     integrations = {
                         cmp = true;
                         treesitter = true;
                     };
 
-                    # Extra style configuraiton.
                     custom_highlights = ''
                         function(colors)
                             return {

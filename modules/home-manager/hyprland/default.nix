@@ -21,14 +21,16 @@ with lib; {
             enable = true;
             package = null;
             portalPackage = null;
+
+            configType = "hyprlang";
             settings = {
                 "$mod" = "SUPER";
                 exec-once = ["waybar"];
 
-                windowrulev2 = [
-                    "fullscreen, class:^(com.saivert.pwvucontrol)$"
-                    "fullscreenstate 3 3, class:^(com.saivert.pwvucontrol)$"
-                    "tile, title:^(Godot)$"
+                windowrule = [
+                    "fullscreen on, match:class ^(com.saivert.pwvucontrol)$"
+                    "fullscreen_state 3 3, match:class ^(com.saivert.pwvucontrol)$"
+                    "tile on, match:title ^(Godot)$"
                 ];
 
                 bind = [
@@ -45,7 +47,7 @@ with lib; {
 
                     # Manage windows.
                     "$mod, W, killactive"
-                    "$mod, X, togglesplit"
+                    "$mod, X, layoutmsg, togglesplit"
                     "$mod, C, pseudo"
                     "$mod, V, togglefloating"
 
@@ -122,7 +124,6 @@ with lib; {
 
                 # Define the primary tiling behaviour
                 dwindle = {
-                    pseudotile = "yes";
                     preserve_split = "yes";
                     split_width_multiplier = 1.25;
                 };
@@ -144,8 +145,13 @@ with lib; {
             hyprpaper = {
                 enable = true;
                 settings = {
-                    preload = ["~/stuff/wallpaper.png"];
-                    wallpaper = [",~/stuff/wallpaper.png"];
+                    splash = false;
+                    wallpaper = [
+                        {
+                            monitor = "";
+                            path = "~/stuff/wallpaper.png";
+                        }
+                    ];
                 };
             };
 
