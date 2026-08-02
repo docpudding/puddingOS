@@ -40,6 +40,7 @@
                 local run_term_job = nil
 
                 -- Search upward from the current buffer for the nearest known project marker.
+                -- Falls back to a bare .virun file so overrides work even with no language marker present.
                 local function find_project_runner()
                     local start_dir = vim.fn.expand("%:p:h")
                     if start_dir == "" then
@@ -51,6 +52,11 @@
                         if found ~= nil then
                             return vim.fs.dirname(found), runner.command
                         end
+                    end
+
+                    local virun_found = vim.fs.find(".virun", { path = start_dir, upward = true })[1]
+                    if virun_found ~= nil then
+                        return vim.fs.dirname(virun_found), nil
                     end
 
                     return nil, nil
@@ -72,6 +78,11 @@
                         if #lines > 0 and lines[1] ~= "" then
                             command = lines[1]
                         end
+                    end
+
+                    if command == nil then
+                        vim.notify("No run command defined for this project.", vim.log.levels.WARN)
+                        return
                     end
 
                     -- Interrupt any run still in progress before starting the next one.
