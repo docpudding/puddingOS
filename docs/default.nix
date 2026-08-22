@@ -1,7 +1,7 @@
 {pkgs ? import <nixpkgs> {}}: let
     home-manager = builtins.fetchGit {
         url = "https://github.com/nix-community/home-manager.git";
-        rev = "0d02ec1d0a05f88ef9e74b516842900c41f0f2fe";
+        rev = "65258d5c65a250189fde2e35f490d15e064c4c62";
     };
     nixosEval = import "${pkgs.path}/nixos/lib/eval-config.nix" {
         inherit pkgs;

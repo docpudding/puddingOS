@@ -14,12 +14,12 @@ You can install and import one or both modules into your existing Nix configurat
 ```nix
 { ... }: let
     pos = builtins.fetchTarball {
-        url = "https://github.com/docpudding/puddingOS/archive/release-25.11.tar.gz";
+        url = "https://github.com/docpudding/puddingOS/archive/release-26.05.tar.gz";
     };
 
     # Optional: required for puddingOS home-manager module.
     home-manager = builtins.fetchTarball {
-        url = "https://github.com/nix-community/home-manager/archive/release-25.11.tar.gz";
+        url = "https://github.com/nix-community/home-manager/archive/release-26.05.tar.gz";
     };
 in {
     imports = [ "${pos}/modules/nixos" ];
@@ -39,12 +39,12 @@ Add puddingOS as a flake input alongside nixpkgs and home-manager:
 ```nix
 {
     inputs = {
-        pos.url = "github:docpudding/puddingOS/release-25.11";
-        nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
+        pos.url = "github:docpudding/puddingOS/release-26.05";
+        nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
 
         # Optional: required for puddingOS home-manager module.
         home-manager = {
-            url = "github:nix-community/home-manager/release-25.11";
+            url = "github:nix-community/home-manager/release-26.05";
             inputs.nixpkgs.follows = "nixpkgs";
         };
     };

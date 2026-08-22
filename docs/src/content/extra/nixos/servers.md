@@ -75,8 +75,8 @@ This submodule provides a unified authenication/authorization system and enables
 ```nix
 {
     inputs = {
-        pos.url = "github:docpudding/puddingOS/release-25.11";
-        nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
+        pos.url = "github:docpudding/puddingOS/release-26.05";
+        nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
         authentik-nix.url = "github:nix-community/authentik-nix";
     };
 
