@@ -4,12 +4,10 @@
     pkgs,
     ...
 }: let
-    cfg = config.pos;
-
-    # Install styling library for various applications.
-    catppuccin = builtins.fetchTarball {
-        url = "https://github.com/catppuccin/nix/archive/release-25.11.tar.gz";
-        sha256 = "0p9v37l8fvm15ziig45ragqfk581584mgl425v1nkqrnkafzl8i3";
+    # Install styling library for various applications, pinned to a specific commit.
+    catppuccin = builtins.fetchGit {
+        url = "https://github.com/catppuccin/nix.git";
+        rev = "096f4670cf078d810a931fae59b57db4cc3fb4d3";
     };
 in {
     # Configuration for toggling puddingOS and other submodules.
@@ -49,7 +47,7 @@ in {
 
     config = lib.mkMerge [
         # Core module (base configuration).
-        (lib.mkIf cfg.enable {
+        (lib.mkIf config.pos.enable {
             nix.settings.experimental-features = ["nix-command" "flakes"];
 
             # OpenGL drivers with legacy support.
@@ -76,7 +74,7 @@ in {
         })
 
         # SDDM module (display manager).
-        (lib.mkIf (cfg.sddm.enable && cfg.enable) {
+        (lib.mkIf (config.pos.sddm.enable && config.pos.enable) {
             services.displayManager.sddm = {
                 enable = true;
                 wayland.enable = true;
@@ -91,7 +89,7 @@ in {
         })
 
         # Hyprland module (desktop environment).
-        (lib.mkIf (cfg.hyprland.enable && cfg.enable) {
+        (lib.mkIf (config.pos.hyprland.enable && config.pos.enable) {
             programs.hyprland = {
                 enable = true;
                 xwayland.enable = true;

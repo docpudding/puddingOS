@@ -1,6 +1,7 @@
 {
     lib,
     config,
+    pkgs,
     ...
 }:
 with lib; {
@@ -9,6 +10,33 @@ with lib; {
         # Top status bar.
         programs.waybar = {
             enable = true;
+
+            package = let
+                cavaSrc = pkgs.fetchFromGitHub {
+                    owner = "LukashonakV";
+                    repo = "cava";
+                    tag = "v0.10.7-beta";
+                    hash = "sha256-IX1B375gTwVDRjpRfwKGuzTAZOV2pgDWzUd4bW2cTDU=";
+                };
+            in
+                pkgs.waybar.overrideAttrs (old: {
+                    version = "0.15.0-lua-dispatch-fix";
+                    src = pkgs.fetchFromGitHub {
+                        owner = "Alexays";
+                        repo = "Waybar";
+                        rev = "05945748dccce28bf96d26d8f64a9e69a8dd49ba";
+                        hash = "sha256-51R3mIt8cLNvh/X5qe9vOqeJCj0U9KRyemVE5y+OhiU=";
+                    };
+
+                    doInstallCheck = false;
+                    postUnpack = ''
+                        pushd "$sourceRoot"
+                        cp -R --no-preserve=mode,ownership ${cavaSrc} subprojects/cava-0.10.7
+                        patchShebangs .
+                        popd
+                    '';
+                });
+
             settings.main = {
                 modules-left = ["custom/run" "hyprland/workspaces"];
                 modules-center = ["clock"];
@@ -36,7 +64,7 @@ with lib; {
                 # Time and date display.
                 "clock" = {
                     format = "<span size='15900'>󰥔</span> {:%I:%M %p}";
-                    format-alt = "<span size='15900'></span> {:%Y-%m-%d}";
+                    format-alt = "<span size='15900'></span> {:%Y-%m-%d}";
                     tooltip = false;
                 };
 
@@ -83,7 +111,7 @@ with lib; {
                 };
 
                 "custom/exit" = {
-                    format = "";
+                    format = "";
                     return-type = "json";
                     exec = "${./fuzzel-exit-daemon.fish}";
                     on-click = "${./fuzzel-exit.fish}";

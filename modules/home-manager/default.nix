@@ -3,9 +3,10 @@
     config,
     ...
 }: let
-    catppuccin = builtins.fetchTarball {
-        url = "https://github.com/catppuccin/nix/archive/release-25.11.tar.gz";
-        sha256 = "0p9v37l8fvm15ziig45ragqfk581584mgl425v1nkqrnkafzl8i3";
+    # Install styling library for various applications, pinned to a specific commit.
+    catppuccin = builtins.fetchGit {
+        url = "https://github.com/catppuccin/nix.git";
+        rev = "096f4670cf078d810a931fae59b57db4cc3fb4d3";
     };
 in {
     # Import dependencies and submodules.
@@ -14,7 +15,6 @@ in {
         ./hyprland
         ./mangohud
         ./qb
-
         ./shell
         ./vi
     ];
