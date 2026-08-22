@@ -74,7 +74,7 @@ in
             version = "0.0.1";
             inherit src;
             fetcherVersion = 2;
-            hash = "sha256-Z8CSP7IbOjeURZUBZDHOYEnXIRBha5oHzIDyzZMNIBQ=";
+            hash = "sha256-xrBrCwsZ9Cvqfehp77J+6jJL/6oaqzSVeOpTt9IDQYQ=";
         };
         buildPhase = ''
             runHook preBuild
