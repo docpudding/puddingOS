@@ -27,7 +27,6 @@ in {
         && config.pos.enable) {
         programs.fish = {
             enable = true;
-
             shellAliases = {
                 # Use fish for nix-shell.
                 nix-shell = "nix-shell --run fish";
@@ -40,18 +39,13 @@ in {
                 # Open another terminal window in the current directory.
                 dupe = "alacritty & disown";
             };
-
             interactiveShellInit = ''
                 set fish_greeting;
             '';
         };
 
         # Apply Catppuccin colors to shell theme.
-        # You can tell it's working if the username text is teal instead of light green.
         catppuccin.fish.enable = true;
-        home.activation.fishCatppuccinTheme = lib.hm.dag.entryAfter ["writeBoundary"] ''
-            ${pkgs.fish}/bin/fish --no-config -c 'fish_config theme choose "Catppuccin Macchiato"'
-        '';
 
         # Default shell behaviour for fish (see https://nixos.wiki/wiki/Fish).
         programs.bash = {
@@ -122,8 +116,8 @@ in {
                 terminal.osc52 = "CopyPaste"; # Allows copy over SSH.
             };
         };
-        catppuccin.alacritty.enable = true;
 
+        catppuccin.alacritty.enable = true;
         home.packages = [rng pkgs.unzip];
     };
 }
