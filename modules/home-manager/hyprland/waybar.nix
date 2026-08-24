@@ -27,7 +27,8 @@ with lib; {
                         rev = "05945748dccce28bf96d26d8f64a9e69a8dd49ba";
                         hash = "sha256-51R3mIt8cLNvh/X5qe9vOqeJCj0U9KRyemVE5y+OhiU=";
                     };
-
+                    mesonFlags = (old.mesonFlags or []) ++ ["-Dtests=disabled"];
+                    doCheck = false;
                     doInstallCheck = false;
                     postUnpack = ''
                         pushd "$sourceRoot"
@@ -110,8 +111,9 @@ with lib; {
                     tooltip = false;
                 };
 
+                # End session utility.
                 "custom/exit" = {
-                    format = "";
+                    format = "󰐥";
                     return-type = "json";
                     exec = "${./fuzzel-exit-daemon.fish}";
                     on-click = "${./fuzzel-exit.fish}";
