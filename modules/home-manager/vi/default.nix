@@ -10,6 +10,16 @@ with lib; let
         ref = "nixos-26.05";
         rev = "667c8471f4a0fb24d702d1a61af8609f1a5f1ba6";
     });
+
+    rangerWithPynvim = pkgs.ranger.overridePythonAttrs (old: {
+        propagatedBuildInputs = (old.propagatedBuildInputs or []) ++ [pkgs.python3Packages.pynvim];
+    });
+
+    rangerPreviewScript = pkgs.writeShellScript "ranger-preview" ''
+        env COLORTERM=8bit bat --color=always --style=plain --paging=never \
+            --theme="Catppuccin Macchiato" -- "$1" 2>/dev/null && exit 5
+        exit 1
+    '';
 in {
     imports = [nixvim.homeManagerModules.nixvim];
 
@@ -33,6 +43,10 @@ in {
             viAlias = true;
             vimAlias = true;
 
+            # Required for rnvimr, which talks to Neovim over RPC via pynvim.
+            withPython3 = true;
+            extraPython3Packages = ps: with ps; [pynvim];
+
             # Use the objectively correct tab length.
             opts = {
                 tabstop = 4;
@@ -46,8 +60,17 @@ in {
                 providers.wl-copy.enable = true;
             };
 
+            # Plugins with no first-class nixvim module, wired up manually.
+            extraPlugins = [pkgs.vimPlugins.rnvimr];
+
             plugins = {
-                telescope.enable = true; # Fuzzy search utility for file names and content.
+                telescope = {
+                    enable = true; # Fuzzy search utility for file names and content.
+                    settings.defaults = {
+                        # Square corners, matching rnvimr's border shape (no curve option there).
+                        borderchars = ["─" "│" "─" "│" "┌" "┐" "┘" "└"];
+                    };
+                };
                 web-devicons.enable = true; # Provides file-type icons.
 
                 # Language Server Protocol (LSP) integrations for various languages.
@@ -243,14 +266,6 @@ in {
                         cmp = true;
                         treesitter = true;
                     };
-
-                    custom_highlights = ''
-                        function(colors)
-                            return {
-                                TelescopeBorder = { fg = colors.lavender},
-                            }
-                        end
-                    '';
                 };
             };
 
@@ -259,27 +274,91 @@ in {
                 highlight Normal guibg=none
             '';
 
-            extraConfigLua = ''
-                -- Make Neovim backgrounds transparent so the terminal's background shows through.
-                vim.api.nvim_set_hl(0, "NormalNC", { bg = "none" })
-                vim.api.nvim_set_hl(0, "StatusLine", { bg = "none" })
-                vim.api.nvim_set_hl(0, "StatusLineNC", { bg = "none" })
-                vim.api.nvim_set_hl(0, "VertSplit", { bg = "none" })
-                vim.api.nvim_set_hl(0, "SignColumn", { bg = "none" })
-                vim.api.nvim_set_hl(0, "TelescopeNormal", { bg = "none" })
-                vim.api.nvim_set_hl(0, "TelescopeBorder", { bg = "none" })
-                vim.api.nvim_set_hl(0, "TelescopePromptNormal", { bg = "none" })
-                vim.api.nvim_set_hl(0, "TelescopePromptBorder", { bg = "none" })
-                vim.api.nvim_set_hl(0, "TelescopeResultsNormal", { bg = "none" })
-                vim.api.nvim_set_hl(0, "TelescopeResultsBorder", { bg = "none" })
-                vim.api.nvim_set_hl(0, "TelescopePreviewNormal", { bg = "none" })
-                vim.api.nvim_set_hl(0, "TelescopePreviewBorder", { bg = "none" })
+            extraConfigLua =
+                ''
+                    -- Make Neovim backgrounds transparent so the terminal's background shows through.
+                    vim.api.nvim_set_hl(0, "NormalNC", { bg = "none" })
+                    vim.api.nvim_set_hl(0, "StatusLine", { bg = "none" })
+                    vim.api.nvim_set_hl(0, "StatusLineNC", { bg = "none" })
+                    vim.api.nvim_set_hl(0, "VertSplit", { bg = "none" })
+                    vim.api.nvim_set_hl(0, "SignColumn", { bg = "none" })
+                    vim.api.nvim_set_hl(0, "RnvimrNormal", { bg = "none" })
 
-                -- When connected over SSH, use OSC 52 for clipboard sharing.
-                if vim.env.SSH_TTY ~= nil then
-                    vim.g.clipboard = 'osc52'
-                end
-            '';
+                    -- Telescope: set border color directly here rather than via catppuccin's
+                    -- custom_highlights, since Telescope's own setup() call appears to re-apply
+                    -- its default highlight groups after the colorscheme's initial pass, undoing
+                    -- color-only changes made there. This block runs after all plugin setups,
+                    -- so it's authoritative. Hardcoded to Catppuccin Macchiato's actual Blue
+                    -- accent hex (#8aadf4), verified from Catppuccin's own style guide table.
+                    local catppuccin_macchiato_blue = "#8aadf4"
+                    vim.api.nvim_set_hl(0, "TelescopeNormal", { bg = "none" })
+                    vim.api.nvim_set_hl(0, "TelescopeBorder", { bg = "none", fg = catppuccin_macchiato_blue })
+                    vim.api.nvim_set_hl(0, "TelescopePromptNormal", { bg = "none" })
+                    vim.api.nvim_set_hl(0, "TelescopePromptBorder", { bg = "none", fg = catppuccin_macchiato_blue })
+                    vim.api.nvim_set_hl(0, "TelescopeResultsNormal", { bg = "none" })
+                    vim.api.nvim_set_hl(0, "TelescopeResultsBorder", { bg = "none", fg = catppuccin_macchiato_blue })
+                    vim.api.nvim_set_hl(0, "TelescopePreviewNormal", { bg = "none" })
+                    vim.api.nvim_set_hl(0, "TelescopePreviewBorder", { bg = "none", fg = catppuccin_macchiato_blue })
+
+                    -- When connected over SSH, use OSC 52 for clipboard sharing.
+                    if vim.env.SSH_TTY ~= nil then
+                        vim.g.clipboard = 'osc52'
+                    end
+
+                    -- rnvimr: run ranger in a floating window, opening files as real buffers
+                    -- in this same nvim instance via RPC.
+                    vim.g.rnvimr_enable_picker = 1 -- Auto-hide the floating window after picking a file.
+                    vim.g.rnvimr_edit_cmd = 'drop' -- Reuse an existing window/tab instead of duplicating.
+
+                    -- Use a dedicated preview script that calls bat directly, bypassing ranger's
+                    -- own MIME-detection-based dispatch entirely (see rangerPreviewScript above).
+                    vim.g.rnvimr_ranger_cmd = {
+                        'ranger',
+                        '--cmd=set preview_script ${rangerPreviewScript}',
+                        '--cmd=set use_preview_script true',
+                    }
+
+                    -- Match Telescope's actual documented default size for its default
+                    -- ("horizontal") layout strategy: width = 0.8, height = 0.9, centered.
+                    vim.g.rnvimr_layout = {
+                        relative = 'editor',
+                        width = math.floor(0.8 * vim.o.columns + 0.5),
+                        height = math.floor(0.9 * vim.o.lines + 0.5),
+                        col = math.floor(0.1 * vim.o.columns + 0.5),
+                        row = math.floor(0.05 * vim.o.lines + 0.5),
+                        style = 'minimal',
+                    }
+
+                    -- Border color limited to the 16-color terminal palette, plus two extended
+                    -- indices (16=Peach, 17=Rosewater) that Catppuccin's Alacritty theme defines.
+                    -- 4 (regular Blue) matches Catppuccin's actual Blue accent color.
+                    vim.g.rnvimr_border_attr = { fg = 4, bg = -1 }
+
+                    -- Close the ranger floating window with Escape, like Telescope. Scoped to
+                    -- terminal buffers whose job is actually `ranger`, so this doesn't hijack
+                    -- Escape's normal "exit terminal-mode" behavior in other :terminal buffers.
+                    vim.api.nvim_create_autocmd("TermOpen", {
+                        callback = function(args)
+                            if vim.fn.bufname(args.buf):match("ranger") then
+                                vim.keymap.set("t", "<Esc>", "<C-\\><C-n>:RnvimrToggle<CR>", {
+                                    buffer = args.buf,
+                                    silent = true,
+                                })
+                            end
+                        end,
+                    })
+
+                    -- Pick up file changes made by other running nvim instances (or externally)
+                    -- when this instance regains focus or a buffer is re-entered.
+                    vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold" }, {
+                        callback = function()
+                            if vim.bo.buftype == "" then
+                                vim.cmd("checktime")
+                            end
+                        end,
+                    })
+                ''
+                + builtins.readFile ./instances.lua;
 
             # Prerequisite packages
             extraPackages = with pkgs; [
@@ -293,6 +372,8 @@ in {
                 typescript # Used by JavaScript/Typescript plugins.
                 vue-language-server # Provides @vue/typescript-plugin for ts_ls.
                 lemminx # XML language server
+                rangerWithPynvim # File browser used by rnvimr, patched with pynvim.
+                bat # Syntax-highlighted preview for ranger.
                 #gcc # For building native extensions
                 #gnumake # For building native extensions
             ];

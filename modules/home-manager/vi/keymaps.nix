@@ -2,8 +2,18 @@
     {
         key = "<F1>";
         mode = ["n" "i" "v"];
-        action = "<ESC>:lua vim.diagnostic.open_float()<CR>";
-        options.desc = "Open diagnostic window for hovered item.";
+        action.__raw = ''
+            function()
+                local line = vim.api.nvim_win_get_cursor(0)[1] - 1
+                local diagnostics = vim.diagnostic.get(0, { lnum = line })
+                if #diagnostics > 0 then
+                    vim.diagnostic.open_float()
+                else
+                    vim.lsp.buf.hover()
+                end
+            end
+        '';
+        options.desc = "Show diagnostic float if present on this line, otherwise LSP hover.";
     }
     {
         key = "<F2>";
@@ -13,9 +23,13 @@
     }
     {
         key = "<F3>";
-        mode = ["n" "i" "v"];
-        action = "<ESC>:set hlsearch!<CR>";
-        options.desc = "Toggle search highlight.";
+        mode = "n";
+        action.__raw = ''
+            function()
+                vim.fn.feedkeys(":%s/", "n")
+            end
+        '';
+        options.desc = "Find and replace.";
     }
     {
         key = "<F5>";
@@ -150,19 +164,51 @@
         options.desc = "Live grep (git-aware).";
     }
     {
-        key = "<leader>r";
+        key = "#";
         mode = "n";
-        action = ":%s//";
-        options.desc = "Replace last search pattern.";
+        action = "gcc";
+        options = {
+            desc = "Toggle comment on the current line.";
+            remap = true;
+        };
     }
     {
-        key = "<leader>R";
+        key = "#";
+        mode = "v";
+        action = "gc";
+        options = {
+            desc = "Toggle comment on the selection.";
+            remap = true;
+        };
+    }
+    {
+        key = "<Tab>";
         mode = "n";
-        action.__raw = ''
-            function()
-                vim.fn.feedkeys(":%s/", "n")
-            end
-        '';
-        options.desc = "Find and replace.";
+        action = "<cmd>RnvimrToggle<CR>";
+        options.desc = "Toggle ranger file browser.";
+    }
+    {
+        key = "m";
+        mode = "n";
+        action = "<cmd>lua PosInstances.move()<CR>";
+        options.desc = "Move current buffer to another nvim instance.";
+    }
+    {
+        key = "M";
+        mode = "n";
+        action = "<cmd>lua PosInstances.popout()<CR>";
+        options.desc = "Pop out current buffer into a new nvim instance.";
+    }
+    {
+        key = "r";
+        mode = "n";
+        action = "<cmd>lua PosInstances.restart_lsp()<CR>";
+        options.desc = "Restart LSP for this buffer (like a refresh button).";
+    }
+    {
+        key = "R";
+        mode = "n";
+        action = "<cmd>lua PosInstances.restart_lsp_everywhere()<CR>";
+        options.desc = "Restart LSP for this buffer across all running instances.";
     }
 ]

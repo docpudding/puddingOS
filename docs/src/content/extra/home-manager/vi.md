@@ -3,17 +3,3 @@ This module provides a complete Neovim setup configured via Nixvim that includes
 Once installed, it can be used by running either `vi`, `vim`, or `nvim`. An additional alias, `svi` which allows editing with root permissions while still maintaining the userspace Neovim configurations.
 
 When using this module as a code IDE, the `<F5>` key is used to run the project. The behaviour depends on the type of project, and can be overridden by creating a `.virun` file at the root of your project containing the desired run command.
-
-## Overridden Keybinds
-
-The following keybinds have been changed from their Neovim defaults:
-
-| Key     | New Action              | Old Action       |
-| ------- | ----------------------- | ---------------- |
-| `?`     | Live grep (git-aware).  | Backward search. |
-| `` ` `` | List open buffers.      | Jump to mark.    |
-| `~`     | Find files (git-aware). | Toggle case.     |
-
-Note that the backward search functionality is still available by using `N` instead of `n` after a normal search. I will probably rebind the case toggle functionality to something else in the future in order to preserve its functionality.
-
-I personally don't use the mark system at all, so I'm considering it free real estate for keybind overrides. If you like using marks, I would recommend either creating new keybinds for the mark system, overriding the puddingOS keybinds that shadow the mark system, or simply not using this module.
