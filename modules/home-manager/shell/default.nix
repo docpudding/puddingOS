@@ -80,19 +80,6 @@ in {
             };
         };
 
-        # Password management
-        programs.password-store = {
-            enable = true;
-            settings.PASSWORD_STORE_DIR = "${config.home.homeDirectory}/.password-store";
-        };
-
-        # GPG key management for password decryption.
-        programs.gpg.enable = true;
-        services.gpg-agent = {
-            enable = true;
-            pinentry.package = pkgs.pinentry-tty;
-        };
-
         # Improved cat command and pager.
         programs.bat.enable = true;
         programs.fish.shellAliases.cat = "bat -pp";
