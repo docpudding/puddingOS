@@ -53,6 +53,12 @@ in {
             default = false;
             description = "Allow public user registration. Disabled by default.";
         };
+
+        runnerToken = mkOption {
+            type = types.nullOr types.str;
+            default = null;
+            description = "Actions runner registration token generated from Gitea. When set, enables a host-mode Actions runner registered against this Gitea instance under the 'host:host' label.";
+        };
     };
     config = mkMerge [
         (mkIf (config.pos.servers.gitea.domain != null) {
@@ -122,6 +128,29 @@ in {
                     proxyPass = "http://${config.pos.servers.gitea.host}:${toString config.pos.servers.gitea.port}";
                     proxyWebsockets = true;
                 };
+            };
+        })
+
+        (mkIf (config.pos.enable && config.pos.servers.gitea.enable && config.pos.servers.gitea.runnerToken != null) {
+            services.gitea-actions-runner.instances.hostrunner = {
+                enable = true;
+                name = "hostrunner";
+                url = "http://${config.pos.servers.gitea.host}:${toString config.pos.servers.gitea.port}";
+                tokenFile = toString (pkgs.writeText "gitea-runner-token" "TOKEN=${config.pos.servers.gitea.runnerToken}");
+                labels = ["host:host"];
+            };
+
+            systemd.services.gitea-runner-hostrunner.serviceConfig = {
+                Environment = [
+                    "PATH=${pkgs.git}/bin:${pkgs.bash}/bin:${pkgs.coreutils}/bin:${pkgs.openssh}/bin:${pkgs.pnpm}/bin:${pkgs.nodejs_24}/bin:${pkgs.rsync}/bin:/run/current-system/sw/bin"
+                ];
+                # Grants read access to Gitea's repository storage (owned by gitea:gitea, mode 750)
+                # so workflow steps can clone directly from local disk instead of over the network.
+                # mkForce is required here: the base gitea-actions-runner module sets
+                # SupplementaryGroups via mkForce itself (likely a deliberate hardening default), which
+                # otherwise discards a plain assignment entirely rather than merging with it. Matching
+                # priority makes the two definitions concatenate instead of one replacing the other.
+                SupplementaryGroups = mkForce ["gitea"];
             };
         })
     ];
