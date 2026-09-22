@@ -116,6 +116,12 @@ This submodule provides a self-hosted platform for Git/VCS repositories. It work
 
 Also, this submodule restricts new account creation by default. In order to create accounts from the Gitea web interface, you need to enable the `allowRegistration` option. It is recommended that you turn it back off after creating the desired accounts unless you intend to provide a Git service to the general public.
 
+### pihole
+
+This submodule provides a network-wide DNS sinkhole for blocking ads and trackers, along with its web frontend. Upstream DNS servers can be set with `upstreamDNS`, and if you need to configure anything else, the `settings` option is merged directly into `services.pihole-ftl.settings`.
+
+You can also gate the dashboard behind Authentik forward auth with `requireAuthentik`. This requires a Provider and Application to be created for the domain in the Authentik admin UI, assigned to the embedded outpost, or the dashboard will just return a 500 instead of prompting you to log in.
+
 ### proxies
 
 Unlike the other submodules, this one doesn't provide a service of its own. `pos.servers.proxies` is an attribute set of arbitrary reverse-proxy entries, for anything that doesn't have (or doesn't need) a dedicated submodule. Each entry is just an nginx vhost pointing at a `host`/`port`, with the same ACME/TLS handling as everything else in this module:
