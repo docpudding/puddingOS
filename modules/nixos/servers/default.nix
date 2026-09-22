@@ -22,6 +22,9 @@ with lib; {
     imports = [
         ./authentik.nix
         ./gitea.nix
+        # ./pihole.nix
+        # ./radicale.nix
+        ./proxies.nix
     ];
 
     config = mkIf config.pos.enable {

@@ -115,3 +115,26 @@ openssl rand -base64 60
 This submodule provides a self-hosted platform for Git/VCS repositories. It works essentially out of the box, but there are a few things to consider. Most importantly, Gitea comes with an option built-in SSH server. It can be toggled with the `enableSSH` option and its port can be configured independently via the `sshPort` option.
 
 Also, this submodule restricts new account creation by default. In order to create accounts from the Gitea web interface, you need to enable the `allowRegistration` option. It is recommended that you turn it back off after creating the desired accounts unless you intend to provide a Git service to the general public.
+
+### proxies
+
+Unlike the other submodules, this one doesn't provide a service of its own. `pos.servers.proxies` is an attribute set of arbitrary reverse-proxy entries, for anything that doesn't have (or doesn't need) a dedicated submodule. Each entry is just an nginx vhost pointing at a `host`/`port`, with the same ACME/TLS handling as everything else in this module:
+
+```nix
+pos.servers.proxies.myapp = {
+    domain = "myapp.example.com";
+    port = 8080;
+};
+```
+
+There's no `enable` option this time, but `domain` and `port` are required rather in order to get the proxy up and running. Entries can also be gated behind Authentik forward auth (single-application mode) with `requireAuthentik`:
+
+```nix
+pos.servers.proxies.myapp = {
+    domain = "myapp.example.com";
+    port = 8080;
+    requireAuthentik = true;
+};
+```
+
+This also requires `pos.servers.authentik.enable` to be set, and a Provider/Application created for the domain in the Authentik admin UI.
