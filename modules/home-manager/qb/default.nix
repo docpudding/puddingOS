@@ -1,6 +1,7 @@
 {
     config,
     lib,
+    pkgs,
     ...
 }:
 with lib; {
@@ -10,12 +11,23 @@ with lib; {
             default = false;
             description = "Enable vim-like web browser.";
         };
+
+        enableWidevine = mkOption {
+            type = types.bool;
+            default = false;
+            description = "Enable Widevine DRM support for playing protected content.";
+        };
     };
 
     config = mkIf (config.pos.qb.enable
         && config.pos.enable) {
         programs.qutebrowser = {
             enable = true;
+
+            package =
+                if config.pos.qb.enableWidevine
+                then pkgs.qutebrowser.override {enableWideVine = true;}
+                else pkgs.qutebrowser;
 
             keyBindings.normal = {
                 "<Ctrl+r>" = "forward";
